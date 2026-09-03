@@ -17,6 +17,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: Routes.onboarding,
      routes: {Routes.onboarding:(context)=>OnBoardingScreen(),
-     Routes.sebhaScreen:(context)=>loginscreen(),
+     Routes.loginscreen:(context)=>loginscreen(),
      },
     );}}

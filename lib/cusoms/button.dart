@@ -6,6 +6,7 @@ class CustomButton extends StatelessWidget {
   final Color colortext;
   final Color colorbutton;
   final VoidCallback onPressed;
+  final IconData? icon;
 
   const CustomButton({
     super.key,
@@ -13,6 +14,7 @@ class CustomButton extends StatelessWidget {
     required this.colorbutton,
     required this.colortext,
     required this.onPressed,
+    this.icon
   });
 
   @override
@@ -32,13 +34,23 @@ class CustomButton extends StatelessWidget {
             ),
           ),
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: colortext,
-            fontSize: 16,
+        child: 
+         
+          Row(
+            mainAxisAlignment: .center,
+            children: [
+              Icon(icon,color: Appcolor.black,size: 30,),
+              Text(
+                text,
+                style: TextStyle(
+                  color: colortext,
+                  fontSize: 16,
+                ),
+              ),
+            ],
           ),
-        ),
+
+        
       ),
     );
   }
