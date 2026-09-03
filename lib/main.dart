@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:graduateproject/screens/loginscreen.dart';
+import 'package:graduateproject/screens/onboardingscreen.dart';
+import 'package:graduateproject/utils/routsapp.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,7 +13,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp( 
-    );
-  }
-}
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: Routes.onboarding,
+     routes: {Routes.onboarding:(context)=>OnBoardingScreen(),
+     Routes.sebhaScreen:(context)=>loginscreen(),
+     },
+    );}}
