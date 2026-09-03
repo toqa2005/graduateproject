@@ -67,6 +67,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
           return Stack(
             children: [
+            
               Positioned.fill(
                 child: Image.asset(
                   screen.image,
@@ -90,6 +91,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ),
               ),
 
+  
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -110,43 +112,62 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      
                       Text(
                         screen.title,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
 
                       const SizedBox(height: 14),
-
                       Text(
                         screen.body,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
+                          color: Color.fromARGB(255, 63, 62, 62),
+                          fontSize: 12,
                           height: 1.3,
                         ),
                       ),
 
                       const SizedBox(height: 20),
 
-                      CustomButton(
-                        text: isLastPage ? "Finish" : "Next",
-                        colorbutton: Appcolor.yellow,
-                        colortext: Colors.black,
-                        onPressed: nextPage,
-                      ),
+                      if (index == 0) ...[
+                        CustomButton(
+                          text: "Explore Now",
+                          colorbutton: Appcolor.yellow,
+                          colortext: Colors.black,
+                          onPressed: nextPage,
+                        ),
+                      ]
 
-                      if (currentPage > 0) ...[
+                      // Second Page - Next only
+                      else if (index == 1) ...[
+                        CustomButton(
+                          text: "Next",
+                          colorbutton: Appcolor.yellow,
+                          colortext: Colors.black,
+                          onPressed: nextPage,
+                        ),
+                      ]
+                      else ...[
+                        CustomButton(
+                          text: isLastPage ? "Finish" : "Next",
+                          colorbutton: Appcolor.yellow,
+                          colortext: Colors.black,
+                          onPressed: nextPage,
+                        ),
+
                         const SizedBox(height: 10),
 
                         CustomButton(
                           text: "Back",
-                          colorbutton: Colors.transparent,
+                          hasBorder: true,
+                          colorbutton: Appcolor.black,
                           colortext: Appcolor.yellow,
                           onPressed: previousPage,
                         ),

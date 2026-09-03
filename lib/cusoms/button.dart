@@ -7,6 +7,7 @@ class CustomButton extends StatelessWidget {
   final Color colorbutton;
   final VoidCallback onPressed;
   final IconData? icon;
+  final bool hasBorder;
 
   const CustomButton({
     super.key,
@@ -14,7 +15,8 @@ class CustomButton extends StatelessWidget {
     required this.colorbutton,
     required this.colortext,
     required this.onPressed,
-    this.icon
+    this.icon,
+    this.hasBorder = false,
   });
 
   @override
@@ -27,11 +29,14 @@ class CustomButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: colorbutton,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: BorderSide(
-              color: Appcolor.yellow,
-              width: 2,
-            ),
+            borderRadius: BorderRadius.circular(15),
+            side: hasBorder
+                ? BorderSide(
+                    color: Appcolor.yellow,
+                    width: 2,
+                  )
+                : BorderSide.none,
+          
           ),
         ),
         child: 

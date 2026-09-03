@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:graduateproject/screens/loginscreen.dart';
 import 'package:graduateproject/screens/onboardingscreen.dart';
+import 'package:graduateproject/screens/password.dart';
+import 'package:graduateproject/screens/registerscreen.dart';
+import 'package:graduateproject/screens/updatescreen.dart';
 import 'package:graduateproject/utils/routsapp.dart';
 
 void main() {
@@ -18,5 +21,8 @@ class MyApp extends StatelessWidget {
       initialRoute: Routes.onboarding,
      routes: {Routes.onboarding:(context)=>OnBoardingScreen(),
      Routes.loginscreen:(context)=>loginscreen(),
+     Routes.registerscreen:(context)=>RegisterScreen(),
+     Routes.forgetpassword:(context)=>ForgetPassword(),
+     Routes.updatescreen:(context)=>Updatescreen(),
      },
     );}}
