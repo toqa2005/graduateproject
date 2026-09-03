@@ -4,8 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graduateproject/cusoms/CustomField.dart';
 import 'package:graduateproject/cusoms/Customtextbutton.dart';
 import 'package:graduateproject/cusoms/button.dart';
+import 'package:graduateproject/cusoms/language.dart';
 import 'package:graduateproject/utils/Appimages.dart';
 import 'package:graduateproject/utils/colors.dart';
+import 'package:graduateproject/utils/routsapp.dart';
 
 class loginscreen extends StatelessWidget {
   const loginscreen({super.key});
@@ -17,7 +19,7 @@ class loginscreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 50),
             child: Column(
               spacing: 15,
               children: [
@@ -30,9 +32,9 @@ class loginscreen extends StatelessWidget {
                 ),
                 Align(
                   alignment: .centerRight,
-                  child: textbutton(text: "forget password")),
+                  child: textbutton(text: "forget password", onPressed: () { Navigator.pushNamed(context, Routes.forgetpassword); },)),
                 CustomButton(
-                  text: "logo",
+                  text: "Login",
                   colorbutton: Appcolor.yellow,
                   colortext: Appcolor.black,
                   onPressed: () {},
@@ -44,7 +46,7 @@ class loginscreen extends StatelessWidget {
                       "Don’t Have Account ?",
                       style: TextStyle(fontSize: 14, color: Appcolor.white),
                     ),
-                    textbutton(text: "Create One"),
+                    textbutton(text: "Create One", onPressed: () {Navigator.pushNamed(context, Routes.registerscreen);  },),
                   ],
                 ),
                 Row(
@@ -69,37 +71,7 @@ class loginscreen extends StatelessWidget {
                   onPressed: () {},
                   icon: Icons.g_mobiledata,
                 ),
-                Container(
-                  width: 92,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    border: Border.all(color: Colors.amber, width: 2),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ClipOval(
-                        child: Image.asset(
-                          Appimages.Eg,
-                          width: 28,
-                          height: 28,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-          
-                      ClipOval(
-                        child: Image.asset(
-                          Appimages.LR,
-                          width: 28,
-                          height: 28,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                Language()
               ],
             ),
           ),

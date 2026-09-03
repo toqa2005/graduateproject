@@ -4,14 +4,14 @@ import 'package:graduateproject/utils/colors.dart';
 
 class textbutton extends StatelessWidget {
    String text;
-   textbutton({super.key,required this.text});
+    final VoidCallback onPressed;
+
+   textbutton({super.key,required this.text,required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-  onPressed: () {
-    // الكود اللي هيشتغل لما تضغطي
-  },
+  onPressed: onPressed,
   child: Text(
    text,
     style: TextStyle(
