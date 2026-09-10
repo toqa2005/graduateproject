@@ -8,9 +8,76 @@ import 'package:graduateproject/cusoms/language.dart';
 import 'package:graduateproject/utils/Appimages.dart';
 import 'package:graduateproject/utils/colors.dart';
 import 'package:graduateproject/utils/routsapp.dart';
+import 'package:graduateproject/screens/homescreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class loginscreen extends StatelessWidget {
+class loginscreen extends StatefulWidget {
   const loginscreen({super.key});
+
+  @override
+  State<loginscreen> createState() => _loginscreenState();
+}
+
+class _loginscreenState extends State<loginscreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  Future<void> login() async {
+    if (emailController.text.trim().isEmpty ||
+        passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please enter email and password"),
+        ),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Login successful"),
+        ),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      String message;
+
+      if (e.code == 'user-not-found') {
+        message = "No account found with this email";
+      } else if (e.code == 'wrong-password' ||
+          e.code == 'invalid-credential') {
+        message = "Email or password is incorrect";
+      } else if (e.code == 'invalid-email') {
+        message = "Invalid email";
+      } else {
+        message = e.message ?? "Login failed";
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error: $e"),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +91,16 @@ class loginscreen extends StatelessWidget {
               spacing: 15,
               children: [
                 Image.asset(Appimages.logo, width: 120, height: 118),
-                CustomField(hintText: "Email", icon: Icons.email),
+                CustomField(
+                  hintText: "Email",
+                  icon: Icons.email,
+                  controller: emailController,
+                ),
                 CustomField(
                   hintText: "password",
                   icon: Icons.lock,
                   icon2: Icons.visibility_off,
+                  controller: passwordController,
                 ),
                 Align(
                   alignment: .centerRight,
@@ -37,7 +109,7 @@ class loginscreen extends StatelessWidget {
                   text: "Login",
                   colorbutton: Appcolor.yellow,
                   colortext: Appcolor.black,
-                  onPressed: () {},
+                  onPressed: login,
                 ),
                 Row(
                   mainAxisAlignment: .center,
