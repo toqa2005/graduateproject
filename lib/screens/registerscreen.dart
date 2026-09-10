@@ -9,6 +9,7 @@ import 'package:graduateproject/utils/avatar.dart';
 import 'package:graduateproject/utils/colors.dart';
 import 'package:graduateproject/screens/loginscreen.dart';
 import 'package:graduateproject/utils/routsapp.dart';
+import 'package:graduateproject/services/auth_services.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -18,6 +19,59 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final phoneController = TextEditingController();
+
+  Future<void> register() async {
+    if (nameController.text.trim().isEmpty ||
+        emailController.text.trim().isEmpty ||
+        passwordController.text.isEmpty ||
+        confirmPasswordController.text.isEmpty ||
+        phoneController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill all fields'),
+        ),
+      );
+      return;
+    }
+
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwords do not match'),
+        ),
+      );
+      return;
+    }
+
+    final user = await AuthService().register(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+      name: nameController.text.trim(),
+      phone: phoneController.text.trim(),
+    );
+
+    if (user != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Account created successfully'),
+        ),
+      );
+
+      goToLogin();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Registration failed'),
+        ),
+      );
+    }
+  }
 
   void goToLogin() {
     Navigator.pushReplacement(
@@ -58,13 +112,14 @@ const SizedBox(height: 12),
                 ),
               ),
 
-              
+
               const SizedBox(height: 18),
 
               // Name
               CustomField(
                 hintText: 'Name',
                 icon: Icons.badge_outlined,
+                controller: nameController,
               ),
 
               const SizedBox(height: 12),
@@ -73,6 +128,7 @@ const SizedBox(height: 12),
               CustomField(
                 hintText: 'Email',
                 icon: Icons.email,
+                controller: emailController,
               ),
 
               const SizedBox(height: 12),
@@ -82,6 +138,7 @@ const SizedBox(height: 12),
                 hintText: 'Password',
                 icon: Icons.lock,
                 icon2: Icons.visibility_off,
+                controller: passwordController,
               ),
 
               const SizedBox(height: 12),
@@ -91,6 +148,7 @@ const SizedBox(height: 12),
                 hintText: 'Confirm Password',
                 icon: Icons.lock,
                 icon2: Icons.visibility_off,
+                controller: confirmPasswordController,
               ),
 
               const SizedBox(height: 12),
@@ -99,6 +157,7 @@ const SizedBox(height: 12),
               CustomField(
                 hintText: 'Phone Number',
                 icon: Icons.phone,
+                controller: phoneController,
               ),
 
               const SizedBox(height: 16),
@@ -108,7 +167,7 @@ const SizedBox(height: 12),
                 text: 'Create Account',
                 colorbutton: Appcolor.yellow,
                 colortext: Appcolor.black,
-                onPressed: goToLogin,
+                onPressed: register,
               ),
 
               const SizedBox(height: 8),
