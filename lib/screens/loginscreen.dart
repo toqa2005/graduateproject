@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graduateproject/cusoms/CustomField.dart';
@@ -10,6 +10,10 @@ import 'package:graduateproject/utils/colors.dart';
 import 'package:graduateproject/utils/routsapp.dart';
 import 'package:graduateproject/screens/homescreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import '../services/google_auth.dart';
+
 
 class loginscreen extends StatefulWidget {
   const loginscreen({super.key});
@@ -103,8 +107,8 @@ class _loginscreenState extends State<loginscreen> {
                   controller: passwordController,
                 ),
                 Align(
-                  alignment: .centerRight,
-                  child: textbutton(text: "forget password", onPressed: () { Navigator.pushNamed(context, Routes.forgetpassword); },)),
+                    alignment: .centerRight,
+                    child: textbutton(text: "forget password", onPressed: () { Navigator.pushNamed(context, Routes.forgetpassword); },)),
                 CustomButton(
                   text: "Login",
                   colorbutton: Appcolor.yellow,
@@ -124,7 +128,7 @@ class _loginscreenState extends State<loginscreen> {
                 Row(
                   children: [
                     Expanded(child: Divider(color: Colors.amber, thickness: 1)),
-          
+
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15),
                       child: Text(
@@ -132,7 +136,7 @@ class _loginscreenState extends State<loginscreen> {
                         style: TextStyle(color: Colors.amber, fontSize: 12),
                       ),
                     ),
-          
+
                     Expanded(child: Divider(color: Colors.amber, thickness: 1)),
                   ],
                 ),
@@ -140,7 +144,16 @@ class _loginscreenState extends State<loginscreen> {
                   text: "Login With Google",
                   colorbutton: Appcolor.yellow,
                   colortext: Appcolor.black,
-                  onPressed: () {},
+                  onPressed: () async {
+                    await GoogleAuth.login(context);
+                    if (!context.mounted) return;
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
+                  },
                   icon: Icons.g_mobiledata,
                 ),
                 Language()

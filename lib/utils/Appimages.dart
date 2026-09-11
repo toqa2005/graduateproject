@@ -14,6 +14,11 @@ class Appimages {
     static const String Avatar1 = "assets/images/Avatar1.png";
     static const String Avatar2 = "assets/images/Avatar2.png";
     static const String Avatar3 = "assets/images/Avatar3.png";
+  static const String background = "assets/images/onboarding6.png";
+  static const String availableNow = "assets/images/AvailableNow.png";
+  static const String watchNow = "assets/images/WatchNow.png";
+
+
 
 
     
