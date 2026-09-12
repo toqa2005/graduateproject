@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:graduateproject/cusoms/Appbar.dart';
+import 'package:graduateproject/cusoms/CustomField.dart';
 import 'package:graduateproject/cusoms/Customtextbutton.dart';
 import 'package:graduateproject/cusoms/button.dart';
-import 'package:graduateproject/cusoms/CustomField.dart';
-import 'package:graduateproject/cusoms/language.dart';
+import 'package:graduateproject/services/auth_services.dart';
 import 'package:graduateproject/utils/avatar.dart';
 import 'package:graduateproject/utils/colors.dart';
-import 'package:graduateproject/screens/loginscreen.dart';
 import 'package:graduateproject/utils/routsapp.dart';
-import 'package:graduateproject/services/auth_services.dart';
 
-import 'homescreen.dart';
+import 'mainscreen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -18,20 +16,17 @@ class RegisterScreen extends StatefulWidget {
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
-
 class _RegisterScreenState extends State<RegisterScreen> {
   final nameController = TextEditingController();
-
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
-
   final confirmPasswordController = TextEditingController();
-
   final phoneController = TextEditingController();
 
+  bool isPasswordVisible = false;
+  bool isConfirmPasswordVisible = false;
+
   Future<void> register() async {
-    // Check Empty Fields
     if (nameController.text.trim().isEmpty ||
         emailController.text.trim().isEmpty ||
         passwordController.text.isEmpty ||
@@ -42,26 +37,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
           content: Text('Please fill all fields'),
         ),
       );
-
       return;
     }
 
-    // Check Password
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Passwords do not match'),
         ),
       );
-
       return;
     }
+
     final user = await AuthService().register(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
       name: nameController.text.trim(),
       phone: phoneController.text.trim(),
     );
+
     if (!mounted) return;
 
     if (user != null) {
@@ -74,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => MainScreen(),
         ),
       );
     } else {
@@ -86,15 +80,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  void goToLogin() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const loginscreen(),
-      ),
-    );
-  }
-
   @override
   void dispose() {
     nameController.dispose();
@@ -102,7 +87,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     passwordController.dispose();
     confirmPasswordController.dispose();
     phoneController.dispose();
-
     super.dispose();
   }
 
@@ -110,27 +94,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Appcolor.black,
-
       appBar: CustomAppbar(
         text: 'Register',
       ),
-
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 5,
           ),
-
           child: Column(
             children: [
               const SizedBox(height: 4),
-
-              // Avatar
               const Avatar(),
-
               const SizedBox(height: 12),
-
               const Text(
                 'Avatar',
                 style: TextStyle(
@@ -138,67 +115,65 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   fontSize: 16,
                 ),
               ),
-
               const SizedBox(height: 18),
-
-              // Name
               CustomField(
                 hintText: 'Name',
                 icon: Icons.badge_outlined,
                 controller: nameController,
               ),
-
               const SizedBox(height: 12),
-
-              // Email
               CustomField(
                 hintText: 'Email',
                 icon: Icons.email,
                 controller: emailController,
+                keyboardType: TextInputType.emailAddress,
               ),
-
               const SizedBox(height: 12),
-
-              // Password
               CustomField(
                 hintText: 'Password',
                 icon: Icons.lock,
-                icon2: Icons.visibility_off,
+                icon2: isPasswordVisible
+                    ? Icons.visibility
+                    : Icons.visibility_off,
                 controller: passwordController,
+                obscureText: !isPasswordVisible,
+                onIcon2Pressed: () {
+                  setState(() {
+                    isPasswordVisible = !isPasswordVisible;
+                  });
+                },
               ),
-
               const SizedBox(height: 12),
-
-              // Confirm Password
               CustomField(
                 hintText: 'Confirm Password',
                 icon: Icons.lock,
-                icon2: Icons.visibility_off,
+                icon2: isConfirmPasswordVisible
+                    ? Icons.visibility
+                    : Icons.visibility_off,
                 controller: confirmPasswordController,
+                obscureText: !isConfirmPasswordVisible,
+                onIcon2Pressed: () {
+                  setState(() {
+                    isConfirmPasswordVisible =
+                    !isConfirmPasswordVisible;
+                  });
+                },
               ),
-
               const SizedBox(height: 12),
-
-              // Phone Number
               CustomField(
                 hintText: 'Phone Number',
                 icon: Icons.phone,
                 controller: phoneController,
+                keyboardType: TextInputType.phone,
               ),
-
               const SizedBox(height: 16),
-
-              // Create Account
               CustomButton(
                 text: 'Create Account',
                 colorbutton: Appcolor.yellow,
                 colortext: Appcolor.black,
                 onPressed: register,
               ),
-
               const SizedBox(height: 8),
-
-              // Login
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -209,7 +184,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       fontSize: 14,
                     ),
                   ),
-
                   textbutton(
                     text: "Login",
                     onPressed: () {
@@ -221,11 +195,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 10),
-
-              // Language
-              Language(),
             ],
           ),
         ),

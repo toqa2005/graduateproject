@@ -5,46 +5,69 @@ class CustomField extends StatelessWidget {
   final String hintText;
   final IconData icon;
   final IconData? icon2;
-  final TextEditingController? controller;
+  final TextEditingController controller;
+  final bool obscureText;
+  final VoidCallback? onIcon2Pressed;
+  final TextInputType? keyboardType;
 
-  CustomField({
+  const CustomField({
     super.key,
     required this.hintText,
     required this.icon,
+    required this.controller,
     this.icon2,
-    this.controller,
+    this.obscureText = false,
+    this.onIcon2Pressed,
+    this.keyboardType,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      cursorRadius: const Radius.circular(15),
+      obscureText: obscureText,
+      keyboardType: keyboardType,
       style: const TextStyle(
-        fontSize: 16,
         color: Appcolor.white,
       ),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(
-          color: Appcolor.white,
-          fontSize: 12,
+          color: Appcolor.gray,
         ),
-        suffixIcon: icon2 != null
-            ? Icon(
-          icon2,
-          color: Colors.white,
-        )
-            : null,
         prefixIcon: Icon(
           icon,
-          color: Colors.white,
+          color: Appcolor.yellow,
         ),
+        suffixIcon: icon2 != null
+            ? IconButton(
+          onPressed: onIcon2Pressed,
+          icon: Icon(
+            icon2,
+            color: Appcolor.yellow,
+          ),
+        )
+            : null,
         filled: true,
-        fillColor: Appcolor.gray,
+        fillColor: Appcolor.black,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Appcolor.gray,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Appcolor.gray,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Appcolor.yellow,
+            width: 2,
+          ),
         ),
       ),
     );
