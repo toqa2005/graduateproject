@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:graduateproject/cusoms/Appbar.dart';
 import 'package:graduateproject/cusoms/Customtextbutton.dart';
@@ -11,6 +10,8 @@ import 'package:graduateproject/screens/loginscreen.dart';
 import 'package:graduateproject/utils/routsapp.dart';
 import 'package:graduateproject/services/auth_services.dart';
 
+import 'homescreen.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -19,14 +20,18 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-
   final nameController = TextEditingController();
+
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
+
   final confirmPasswordController = TextEditingController();
+
   final phoneController = TextEditingController();
 
   Future<void> register() async {
+    // Check Empty Fields
     if (nameController.text.trim().isEmpty ||
         emailController.text.trim().isEmpty ||
         passwordController.text.isEmpty ||
@@ -37,24 +42,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
           content: Text('Please fill all fields'),
         ),
       );
+
       return;
     }
 
+    // Check Password
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Passwords do not match'),
         ),
       );
+
       return;
     }
-
     final user = await AuthService().register(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
       name: nameController.text.trim(),
       phone: phoneController.text.trim(),
     );
+    if (!mounted) return;
 
     if (user != null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -63,7 +71,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       );
 
-      goToLogin();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -83,11 +96,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    phoneController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Appcolor.black,
 
-      appBar: CustomAppbar(text: 'Register',),
+      appBar: CustomAppbar(
+        text: 'Register',
+      ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -97,13 +124,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
           child: Column(
             children: [
-
               const SizedBox(height: 4),
-
 
               // Avatar
               const Avatar(),
-const SizedBox(height: 12),
+
+              const SizedBox(height: 12),
+
               const Text(
                 'Avatar',
                 style: TextStyle(
@@ -111,7 +138,6 @@ const SizedBox(height: 12),
                   fontSize: 16,
                 ),
               ),
-
 
               const SizedBox(height: 18),
 
@@ -180,8 +206,7 @@ const SizedBox(height: 12),
                     'Already Have Account ? ',
                     style: TextStyle(
                       color: Appcolor.white,
-                      fontSize: 14
-                      ,
+                      fontSize: 14,
                     ),
                   ),
 
