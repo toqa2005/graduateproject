@@ -5,12 +5,13 @@ import '../../utils/colors.dart';
 import '../rate.dart';
 
 class SmallCard extends StatelessWidget {
-  final MovieModel movie;
+  final Movies movie;
 
   const SmallCard({
     super.key,
     required this.movie,
   });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,7 +20,6 @@ class SmallCard extends StatelessWidget {
       margin: const EdgeInsets.only(
         right: 12,
       ),
-
       child: Column(
         children: [
           Expanded(
@@ -27,13 +27,11 @@ class SmallCard extends StatelessWidget {
               children: [
                 Positioned.fill(
                   child: ClipRRect(
-                    borderRadius:
-                    BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      movie.mediumCoverImage,
+                      movie.mediumCoverImage ?? '',
                       fit: BoxFit.cover,
-                      errorBuilder:
-                          (
+                      errorBuilder: (
                           context,
                           error,
                           stackTrace,
@@ -53,24 +51,24 @@ class SmallCard extends StatelessWidget {
                   top: 5,
                   left: 5,
                   child: Container(
-                      padding:
-                      const EdgeInsets.symmetric(
-                        horizontal: 5,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                        Appcolor.black,
-                        borderRadius:
-                        BorderRadius.circular(6),
-                      ),
-                      child:Rate(rating: movie.rating)
-                  ),
-                ),]
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Appcolor.black,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Rate(
+                      rating: movie.rating ?? 0.0,
+                    ),
                   ),
                 ),
               ],
             ),
+          ),
+        ],
+      ),
     );
   }
 }

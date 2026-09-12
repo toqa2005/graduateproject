@@ -11,10 +11,8 @@ import 'package:graduateproject/utils/routsapp.dart';
 import 'package:graduateproject/screens/homescreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../services/google_auth.dart';
-
-
+import 'mainscreen.dart';
 class loginscreen extends StatefulWidget {
   const loginscreen({super.key});
 
@@ -150,7 +148,7 @@ class _loginscreenState extends State<loginscreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
+                        builder: (context) => MainScreen(),
                       ),
                     );
                   },
