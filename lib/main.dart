@@ -2,14 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'package:graduateproject/screens/homescreen.dart';
-import 'package:graduateproject/screens/loginscreen.dart';
-import 'package:graduateproject/screens/onboardingscreen.dart';
-import 'package:graduateproject/screens/password.dart';
-import 'package:graduateproject/screens/registerscreen.dart';
-import 'package:graduateproject/screens/updatescreen.dart';
-import 'package:graduateproject/utils/routsapp.dart';
+import 'package:graduateproject/features/home/presentation/screens/homescreen.dart';
+import 'package:graduateproject/features/auth/presentation/screens/loginscreen.dart';
+import 'package:graduateproject/features/auth/presentation/screens/password.dart';
+import 'package:graduateproject/features/auth/presentation/screens/registerscreen.dart';
+import 'package:graduateproject/features/auth/presentation/screens/updatescreen.dart';
+import 'package:graduateproject/core/routes/routsapp.dart';
 
+import 'features/onboarding/presentation/onboardingscreen.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
