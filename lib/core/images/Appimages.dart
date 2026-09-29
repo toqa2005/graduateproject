@@ -17,7 +17,7 @@ class Appimages {
   static const String background = "assets/images/onboarding6.png";
   static const String availableNow = "assets/images/AvailableNow.png";
   static const String watchNow = "assets/images/WatchNow.png";
-
+  static const String empty = "assets/images/Epmty.png";
 
 
 

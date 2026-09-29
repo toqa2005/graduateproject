@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../colors/Appcolors.dart';
+import '../../colors/Appcolors.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
   final Color colortext;
   final Color colorbutton;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final IconData? icon;
   final bool hasBorder;
 
@@ -28,34 +28,38 @@ class CustomButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: colorbutton,
+          disabledBackgroundColor: colorbutton.withOpacity(.45),
+          disabledForegroundColor: colortext.withOpacity(.45),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
             side: hasBorder
-                ? BorderSide(
-                    color: Appcolor.yellow,
-                    width: 2,
-                  )
+                ? const BorderSide(
+              color: Appcolor.yellow,
+              width: 2,
+            )
                 : BorderSide.none,
-          
           ),
         ),
-        child: 
-         
-          Row(
-            mainAxisAlignment: .center,
-            children: [
-              Icon(icon,color: Appcolor.black,size: 30,),
-              Text(
-                text,
-                style: TextStyle(
-                  color: colortext,
-                  fontSize: 16,
-                ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              Icon(
+                icon,
+                color: colortext,
+                size: 30,
               ),
+              const SizedBox(width: 5),
             ],
-          ),
-
-        
+            Text(
+              text,
+              style: TextStyle(
+                color: colortext,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

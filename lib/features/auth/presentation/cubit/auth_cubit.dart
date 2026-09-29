@@ -34,7 +34,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       emit(AuthLoginSuccess());
     } on FirebaseAuthException catch (e) {
-      emit(AuthFailure(_getErrorMessage(e)));
+      emit(AuthFailure(getErrorMessage(e)));
     } catch (e) {
       emit(AuthFailure("Error: $e"));
     }
@@ -50,7 +50,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       emit(AuthGoogleLoginSuccess());
     } on FirebaseAuthException catch (e) {
-      emit(AuthFailure(_getGoogleErrorMessage(e)));
+      emit(AuthFailure(getGoogleErrorMessage(e)));
     } catch (e) {
       emit(AuthFailure("Google Login Error: $e"));
     }
@@ -61,6 +61,7 @@ class AuthCubit extends Cubit<AuthState> {
     required String password,
     required String name,
     required String phone,
+    String? avatarAsset,
   }) async {
     if (state is AuthLoading) return;
 
@@ -84,18 +85,23 @@ class AuthCubit extends Cubit<AuthState> {
         password: password,
         name: name.trim(),
         phone: phone.trim(),
+        avatarAsset: avatarAsset,
       );
 
       emit(AuthRegisterSuccess());
     } on FirebaseAuthException catch (e) {
-      emit(AuthFailure(_getRegisterErrorMessage(e)));
+      emit(AuthFailure(getRegisterErrorMessage(e)));
     } catch (e) {
       emit(AuthFailure("Registration failed: $e"));
     }
   }
+
   Future<void> updateProfile({
     required String name,
     required String phone,
+    String? avatarAsset,
+    String? customAvatarBase64,
+    bool clearCustomAvatar = false,
   }) async {
     if (state is AuthLoading) return;
 
@@ -114,6 +120,9 @@ class AuthCubit extends Cubit<AuthState> {
       await repository.updateProfile(
         name: name.trim(),
         phone: phone.trim(),
+        avatarAsset: avatarAsset,
+        customAvatarBase64: customAvatarBase64,
+        clearCustomAvatar: clearCustomAvatar,
       );
 
       emit(AuthUpdateSuccess());
@@ -125,6 +134,38 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
   }
+
+  Future<void> deleteAccount({required String password}) async {
+    if (state is AuthLoading) return;
+
+    if (password.isEmpty) {
+      emit(AuthFailure("Please enter your password"));
+      return;
+    }
+
+    emit(AuthLoading());
+
+    try {
+      await repository.deleteAccount(password: password);
+
+      emit(AuthDeleteSuccess());
+    } on FirebaseAuthException catch (e) {
+      String message = e.message ?? "Failed to delete account";
+
+      if (e.code == 'wrong-password' ||
+          e.code == 'invalid-credential' ||
+          e.code == 'invalid-login-credentials') {
+        message = "Incorrect password";
+      } else if (e.code == 'operation-not-allowed') {
+        message = e.message ?? "This account does not use email and password";
+      }
+
+      emit(AuthFailure(message));
+    } catch (e) {
+      emit(AuthFailure("Failed to delete account"));
+    }
+  }
+
   Future<void> resetPassword({
     required String email,
   }) async {
@@ -148,7 +189,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       emit(AuthResetPasswordSuccess());
     } on FirebaseAuthException catch (e) {
-      emit(AuthFailure(_getResetPasswordErrorMessage(e)));
+      emit(AuthFailure(getResetPasswordErrorMessage(e)));
     } catch (e) {
       emit(
         AuthFailure(
@@ -158,7 +199,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  String _getErrorMessage(FirebaseAuthException e) {
+  String getErrorMessage(FirebaseAuthException e) {
     if (e.code == 'user-not-found') {
       return "No account found with this email";
     }
@@ -179,7 +220,7 @@ class AuthCubit extends Cubit<AuthState> {
     return e.message ?? "Login failed";
   }
 
-  String _getGoogleErrorMessage(FirebaseAuthException e) {
+  String getGoogleErrorMessage(FirebaseAuthException e) {
     if (e.code == 'network-request-failed') {
       return "Please check your internet connection";
     }
@@ -191,7 +232,7 @@ class AuthCubit extends Cubit<AuthState> {
     return e.message ?? "Google Login failed";
   }
 
-  String _getRegisterErrorMessage(FirebaseAuthException e) {
+  String getRegisterErrorMessage(FirebaseAuthException e) {
     if (e.code == 'email-already-in-use') {
       return "This email is already registered";
     }
@@ -211,7 +252,7 @@ class AuthCubit extends Cubit<AuthState> {
     return e.message ?? "Registration failed";
   }
 
-  String _getResetPasswordErrorMessage(
+  String getResetPasswordErrorMessage(
       FirebaseAuthException e,
       ) {
     if (e.code == 'invalid-email') {

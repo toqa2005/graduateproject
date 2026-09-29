@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graduateproject/core/widgets/button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:graduateproject/core/widgets/custom/button.dart';
 import 'package:graduateproject/features/auth/presentation/screens/loginscreen.dart';
 import 'package:graduateproject/features/onboarding/data/onboardingdata.dart';
 
@@ -23,13 +24,20 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     super.dispose();
   }
 
-  void nextPage() {
+  Future<void> _completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboarding_completed', true);
+  }
+
+  Future<void> nextPage() async {
     if (currentPage < OnBoardingData.pages.length - 1) {
       pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
+      await _completeOnboarding();
+      if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -68,7 +76,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
           return Stack(
             children: [
-            
+
               Positioned.fill(
                 child: Image.asset(
                   screen.image,
@@ -92,7 +100,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ),
               ),
 
-  
+
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -113,7 +121,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      
+
                       Text(
                         screen.title,
                         textAlign: TextAlign.center,
@@ -156,23 +164,23 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         ),
                       ]
                       else ...[
-                        CustomButton(
-                          text: isLastPage ? "Finish" : "Next",
-                          colorbutton: Appcolor.yellow,
-                          colortext: Colors.black,
-                          onPressed: nextPage,
-                        ),
+                          CustomButton(
+                            text: isLastPage ? "Finish" : "Next",
+                            colorbutton: Appcolor.yellow,
+                            colortext: Colors.black,
+                            onPressed: nextPage,
+                          ),
 
-                        const SizedBox(height: 10),
+                          const SizedBox(height: 10),
 
-                        CustomButton(
-                          text: "Back",
-                          hasBorder: true,
-                          colorbutton: Appcolor.black,
-                          colortext: Appcolor.yellow,
-                          onPressed: previousPage,
-                        ),
-                      ],
+                          CustomButton(
+                            text: "Back",
+                            hasBorder: true,
+                            colorbutton: Appcolor.black,
+                            colortext: Appcolor.yellow,
+                            onPressed: previousPage,
+                          ),
+                        ],
                     ],
                   ),
                 ),

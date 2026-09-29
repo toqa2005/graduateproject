@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../colors/Appcolors.dart';
+import '../../colors/Appcolors.dart';
 
 class CustomField extends StatelessWidget {
   final String hintText;
@@ -9,6 +9,7 @@ class CustomField extends StatelessWidget {
   final bool obscureText;
   final VoidCallback? onIcon2Pressed;
   final TextInputType? keyboardType;
+  final ValueChanged<String>? onChanged;
 
   const CustomField({
     super.key,
@@ -19,6 +20,7 @@ class CustomField extends StatelessWidget {
     this.obscureText = false,
     this.onIcon2Pressed,
     this.keyboardType,
+    this.onChanged,
   });
 
   @override
@@ -27,6 +29,10 @@ class CustomField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
+      onChanged: onChanged,
+      maxLines: 1,
+      autocorrect: false,
+      enableSuggestions: !obscureText,
       style: const TextStyle(
         color: Appcolor.white,
       ),
@@ -59,7 +65,7 @@ class CustomField extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
-            color: Appcolor.gray,
+            color: Appcolor.lightgray,
           ),
         ),
         focusedBorder: OutlineInputBorder(

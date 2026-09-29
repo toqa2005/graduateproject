@@ -9,20 +9,24 @@ class MovieModel {
   MovieModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     statusMessage = json['status_message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-    meta = json['@meta'] != null ? new Meta.fromJson(json['@meta']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    meta = json['@meta'] != null ? Meta.fromJson(json['@meta']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['status_message'] = this.statusMessage;
+    final Map<String, dynamic> data = {};
+
+    data['status'] = status;
+    data['status_message'] = statusMessage;
+
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
-    if (this.meta != null) {
-      data['@meta'] = this.meta!.toJson();
+
+    if (meta != null) {
+      data['@meta'] = meta!.toJson();
     }
+
     return data;
   }
 }
@@ -39,22 +43,29 @@ class Data {
     movieCount = json['movie_count'];
     limit = json['limit'];
     pageNumber = json['page_number'];
+
     if (json['movies'] != null) {
       movies = <Movies>[];
-      json['movies'].forEach((v) {
-        movies!.add(new Movies.fromJson(v));
-      });
+
+      for (final movie in json['movies']) {
+        movies!.add(Movies.fromJson(Map<String, dynamic>.from(movie)));
+      }
+    } else {
+      movies = [];
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['movie_count'] = this.movieCount;
-    data['limit'] = this.limit;
-    data['page_number'] = this.pageNumber;
-    if (this.movies != null) {
-      data['movies'] = this.movies!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = {};
+
+    data['movie_count'] = movieCount;
+    data['limit'] = limit;
+    data['page_number'] = pageNumber;
+
+    if (movies != null) {
+      data['movies'] = movies!.map((movie) => movie.toJson()).toList();
     }
+
     return data;
   }
 }
@@ -83,37 +94,42 @@ class Movies {
   String? mediumCoverImage;
   String? largeCoverImage;
   String? state;
+  int? likeCount;
+  List<Cast>? cast;
   List<Torrents>? torrents;
   String? dateUploaded;
   int? dateUploadedUnix;
 
-  Movies(
-      {this.id,
-        this.url,
-        this.imdbCode,
-        this.title,
-        this.titleEnglish,
-        this.titleLong,
-        this.slug,
-        this.year,
-        this.rating,
-        this.runtime,
-        this.genres,
-        this.summary,
-        this.descriptionFull,
-        this.synopsis,
-        this.ytTrailerCode,
-        this.language,
-        this.mpaRating,
-        this.backgroundImage,
-        this.backgroundImageOriginal,
-        this.smallCoverImage,
-        this.mediumCoverImage,
-        this.largeCoverImage,
-        this.state,
-        this.torrents,
-        this.dateUploaded,
-        this.dateUploadedUnix});
+  Movies({
+    this.id,
+    this.url,
+    this.imdbCode,
+    this.title,
+    this.titleEnglish,
+    this.titleLong,
+    this.slug,
+    this.year,
+    this.rating,
+    this.runtime,
+    this.genres,
+    this.summary,
+    this.descriptionFull,
+    this.synopsis,
+    this.ytTrailerCode,
+    this.language,
+    this.mpaRating,
+    this.backgroundImage,
+    this.backgroundImageOriginal,
+    this.smallCoverImage,
+    this.mediumCoverImage,
+    this.largeCoverImage,
+    this.state,
+    this.likeCount,
+    this.cast,
+    this.torrents,
+    this.dateUploaded,
+    this.dateUploadedUnix,
+  });
 
   Movies.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -124,11 +140,17 @@ class Movies {
     titleLong = json['title_long'];
     slug = json['slug'];
     year = json['year'];
+
     rating = (json['rating'] as num?)?.toDouble();
+
     runtime = json['runtime'];
-    genres = json['genres'] != null
-        ? List<String>.from(json['genres'])
-        : [];
+
+    if (json['genres'] != null) {
+      genres = List<String>.from(json['genres']);
+    } else {
+      genres = [];
+    }
+
     summary = json['summary'];
     descriptionFull = json['description_full'];
     synopsis = json['synopsis'];
@@ -141,48 +163,97 @@ class Movies {
     mediumCoverImage = json['medium_cover_image'];
     largeCoverImage = json['large_cover_image'];
     state = json['state'];
+    likeCount = json['like_count'];
+
+    if (json['cast'] != null) {
+      cast = <Cast>[];
+      for (final person in json['cast']) {
+        if (person is Map) {
+          cast!.add(Cast.fromJson(Map<String, dynamic>.from(person)));
+        }
+      }
+    } else {
+      cast = [];
+    }
+
     if (json['torrents'] != null) {
       torrents = <Torrents>[];
-      json['torrents'].forEach((v) {
-        torrents!.add(new Torrents.fromJson(v));
-      });
+
+      for (final torrent in json['torrents']) {
+        torrents!.add(Torrents.fromJson(Map<String, dynamic>.from(torrent)));
+      }
+    } else {
+      torrents = [];
     }
+
     dateUploaded = json['date_uploaded'];
     dateUploadedUnix = json['date_uploaded_unix'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['url'] = this.url;
-    data['imdb_code'] = this.imdbCode;
-    data['title'] = this.title;
-    data['title_english'] = this.titleEnglish;
-    data['title_long'] = this.titleLong;
-    data['slug'] = this.slug;
-    data['year'] = this.year;
-    data['rating'] = this.rating;
-    data['runtime'] = this.runtime;
-    data['genres'] = this.genres;
-    data['summary'] = this.summary;
-    data['description_full'] = this.descriptionFull;
-    data['synopsis'] = this.synopsis;
-    data['yt_trailer_code'] = this.ytTrailerCode;
-    data['language'] = this.language;
-    data['mpa_rating'] = this.mpaRating;
-    data['background_image'] = this.backgroundImage;
-    data['background_image_original'] = this.backgroundImageOriginal;
-    data['small_cover_image'] = this.smallCoverImage;
-    data['medium_cover_image'] = this.mediumCoverImage;
-    data['large_cover_image'] = this.largeCoverImage;
-    data['state'] = this.state;
-    if (this.torrents != null) {
-      data['torrents'] = this.torrents!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = {};
+
+    data['id'] = id;
+    data['url'] = url;
+    data['imdb_code'] = imdbCode;
+    data['title'] = title;
+    data['title_english'] = titleEnglish;
+    data['title_long'] = titleLong;
+    data['slug'] = slug;
+    data['year'] = year;
+    data['rating'] = rating;
+    data['runtime'] = runtime;
+    data['genres'] = genres;
+    data['summary'] = summary;
+    data['description_full'] = descriptionFull;
+    data['synopsis'] = synopsis;
+    data['yt_trailer_code'] = ytTrailerCode;
+    data['language'] = language;
+    data['mpa_rating'] = mpaRating;
+    data['background_image'] = backgroundImage;
+    data['background_image_original'] = backgroundImageOriginal;
+    data['small_cover_image'] = smallCoverImage;
+    data['medium_cover_image'] = mediumCoverImage;
+    data['large_cover_image'] = largeCoverImage;
+    data['state'] = state;
+    data['like_count'] = likeCount;
+
+    if (cast != null) {
+      data['cast'] = cast!.map((person) => person.toJson()).toList();
     }
-    data['date_uploaded'] = this.dateUploaded;
-    data['date_uploaded_unix'] = this.dateUploadedUnix;
+
+    if (torrents != null) {
+      data['torrents'] = torrents!.map((torrent) => torrent.toJson()).toList();
+    }
+
+    data['date_uploaded'] = dateUploaded;
+    data['date_uploaded_unix'] = dateUploadedUnix;
+
     return data;
   }
+}
+
+class Cast {
+  String? name;
+  String? characterName;
+  String? urlSmallImage;
+  String? imdbCode;
+
+  Cast({this.name, this.characterName, this.urlSmallImage, this.imdbCode});
+
+  Cast.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    characterName = json['character_name'];
+    urlSmallImage = json['url_small_image'];
+    imdbCode = json['imdb_code'];
+  }
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'character_name': characterName,
+    'url_small_image': urlSmallImage,
+    'imdb_code': imdbCode,
+  };
 }
 
 class Torrents {
@@ -201,21 +272,22 @@ class Torrents {
   String? dateUploaded;
   int? dateUploadedUnix;
 
-  Torrents(
-      {this.url,
-        this.hash,
-        this.quality,
-        this.type,
-        this.isRepack,
-        this.videoCodec,
-        this.bitDepth,
-        this.audioChannels,
-        this.seeds,
-        this.peers,
-        this.size,
-        this.sizeBytes,
-        this.dateUploaded,
-        this.dateUploadedUnix});
+  Torrents({
+    this.url,
+    this.hash,
+    this.quality,
+    this.type,
+    this.isRepack,
+    this.videoCodec,
+    this.bitDepth,
+    this.audioChannels,
+    this.seeds,
+    this.peers,
+    this.size,
+    this.sizeBytes,
+    this.dateUploaded,
+    this.dateUploadedUnix,
+  });
 
   Torrents.fromJson(Map<String, dynamic> json) {
     url = json['url'];
@@ -235,21 +307,23 @@ class Torrents {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['url'] = this.url;
-    data['hash'] = this.hash;
-    data['quality'] = this.quality;
-    data['type'] = this.type;
-    data['is_repack'] = this.isRepack;
-    data['video_codec'] = this.videoCodec;
-    data['bit_depth'] = this.bitDepth;
-    data['audio_channels'] = this.audioChannels;
-    data['seeds'] = this.seeds;
-    data['peers'] = this.peers;
-    data['size'] = this.size;
-    data['size_bytes'] = this.sizeBytes;
-    data['date_uploaded'] = this.dateUploaded;
-    data['date_uploaded_unix'] = this.dateUploadedUnix;
+    final Map<String, dynamic> data = {};
+
+    data['url'] = url;
+    data['hash'] = hash;
+    data['quality'] = quality;
+    data['type'] = type;
+    data['is_repack'] = isRepack;
+    data['video_codec'] = videoCodec;
+    data['bit_depth'] = bitDepth;
+    data['audio_channels'] = audioChannels;
+    data['seeds'] = seeds;
+    data['peers'] = peers;
+    data['size'] = size;
+    data['size_bytes'] = sizeBytes;
+    data['date_uploaded'] = dateUploaded;
+    data['date_uploaded_unix'] = dateUploadedUnix;
+
     return data;
   }
 }
@@ -263,19 +337,23 @@ class Meta {
 
   Meta.fromJson(Map<String, dynamic> json) {
     migration = json['migration'] != null
-        ? new Migration.fromJson(json['migration'])
+        ? Migration.fromJson(json['migration'])
         : null;
+
     apiVersion = json['api_version'];
     executionTime = json['execution_time'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.migration != null) {
-      data['migration'] = this.migration!.toJson();
+    final Map<String, dynamic> data = {};
+
+    if (migration != null) {
+      data['migration'] = migration!.toJson();
     }
-    data['api_version'] = this.apiVersion;
-    data['execution_time'] = this.executionTime;
+
+    data['api_version'] = apiVersion;
+    data['execution_time'] = executionTime;
+
     return data;
   }
 }
@@ -296,11 +374,13 @@ class Migration {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['old_base'] = this.oldBase;
-    data['new_base'] = this.newBase;
-    data['sunset'] = this.sunset;
+    final Map<String, dynamic> data = {};
+
+    data['message'] = message;
+    data['old_base'] = oldBase;
+    data['new_base'] = newBase;
+    data['sunset'] = sunset;
+
     return data;
   }
 }

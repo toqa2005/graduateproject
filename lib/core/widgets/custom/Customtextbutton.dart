@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../colors/Appcolors.dart';
+import '../../colors/Appcolors.dart';
 
 class textbutton extends StatelessWidget {
    String text;
