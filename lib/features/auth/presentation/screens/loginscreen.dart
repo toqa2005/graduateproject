@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduateproject/core/widgets/CustomField.dart';
-import 'package:graduateproject/core/widgets/Customtextbutton.dart';
-import 'package:graduateproject/core/widgets/button.dart';
+import 'package:graduateproject/core/widgets/custom/CustomField.dart';
+import 'package:graduateproject/core/widgets/custom/Customtextbutton.dart';
+import 'package:graduateproject/core/widgets/custom/button.dart';
 import 'package:graduateproject/core/images/Appimages.dart';
 import 'package:graduateproject/core/routes/routsapp.dart';
 import '../../../../core/colors/Appcolors.dart';
+import '../../../../core/widgets/custom/snakBar.dart';
 import '../cubit/auth_cubit.dart';
 import '../../data/auth_repository.dart';
-import '../../../../core/widgets/botom_navigation.dart';
+import '../../../../core/widgets/mainscreen.dart';
 import '../cubit/authstate.dart';
 
 class loginscreen extends StatefulWidget {
@@ -19,11 +20,9 @@ class loginscreen extends StatefulWidget {
 }
 
 class _loginscreenState extends State<loginscreen> {
-  final TextEditingController emailController =
-  TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
-  final TextEditingController passwordController =
-  TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   bool isPasswordVisible = false;
 
@@ -40,25 +39,24 @@ class _loginscreenState extends State<loginscreen> {
       create: (_) => AuthCubit(AuthRepository()),
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is AuthLoginSuccess ||
-              state is AuthGoogleLoginSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Login successful"),
-              ),
-            );
+          if (state is AuthLoginSuccess || state is AuthGoogleLoginSuccess) {
+            CustomSnakbar.show(context, text: 'Login successful');
 
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
-                builder: (context) => MainScreen(),
-              ),
+              MaterialPageRoute(builder: (context) => MainScreen()),
             );
           }
 
           if (state is AuthFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
+                backgroundColor: Appcolor.yellow,
+                behavior: SnackBarBehavior.floating,
+                margin: const EdgeInsets.all(16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 content: Text(state.message),
               ),
             );
@@ -78,11 +76,7 @@ class _loginscreenState extends State<loginscreen> {
                     child: Column(
                       spacing: 15,
                       children: [
-                        Image.asset(
-                          Appimages.logo,
-                          width: 120,
-                          height: 118,
-                        ),
+                        Image.asset(Appimages.logo, width: 120, height: 118),
                         CustomField(
                           hintText: "Email",
                           icon: Icons.email,
@@ -98,8 +92,7 @@ class _loginscreenState extends State<loginscreen> {
                           obscureText: !isPasswordVisible,
                           onIcon2Pressed: () {
                             setState(() {
-                              isPasswordVisible =
-                              !isPasswordVisible;
+                              isPasswordVisible = !isPasswordVisible;
                             });
                           },
                         ),
@@ -122,14 +115,12 @@ class _loginscreenState extends State<loginscreen> {
                           onPressed: () {
                             context.read<AuthCubit>().login(
                               email: emailController.text,
-                              password:
-                              passwordController.text,
+                              password: passwordController.text,
                             );
                           },
                         ),
                         Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               "Don’t Have Account ?",
@@ -158,9 +149,7 @@ class _loginscreenState extends State<loginscreen> {
                               ),
                             ),
                             const Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 15,
-                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 15),
                               child: Text(
                                 "OR",
                                 style: TextStyle(
@@ -182,9 +171,7 @@ class _loginscreenState extends State<loginscreen> {
                           colorbutton: Appcolor.yellow,
                           colortext: Appcolor.black,
                           onPressed: () {
-                            context
-                                .read<AuthCubit>()
-                                .loginWithGoogle();
+                            context.read<AuthCubit>().loginWithGoogle();
                           },
                           icon: Icons.g_mobiledata,
                         ),

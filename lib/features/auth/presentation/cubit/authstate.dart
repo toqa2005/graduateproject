@@ -14,6 +14,8 @@ class AuthResetPasswordSuccess extends AuthState {}
 
 class AuthUpdateSuccess extends AuthState {}
 
+class AuthDeleteSuccess extends AuthState {}
+
 class AuthFailure extends AuthState {
   final String message;
 
